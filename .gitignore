@@ -1,0 +1,40 @@
+# Dependencies
+/vendor/
+composer.lock
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Testing
+.phpunit.result.cache
+phpunit.xml
+coverage/
+.phpunit.cache
+
+# Build artifacts
+/build/
+/dist/
+
+# Backup folders (slimming artifacts)
+backup_*/
+
+# Temporary files
+*.swp
+*.swo
+*~
+.php_cs.cache
+.php-cs-fixer.cache
+
+# Environment
+.env
+.env.*
+
+# Node (if using for docs)
+node_modules/
+npm-debug.log
+yarn-error.log
