@@ -2,8 +2,8 @@
 
 namespace Saeedvir\Modules\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\ServiceProvider;
 
 class LazyConsoleServiceProvider extends ServiceProvider
 {
@@ -88,7 +88,7 @@ class LazyConsoleServiceProvider extends ServiceProvider
     {
         // Only register essential commands immediately
         $this->registerEssentialCommands();
-        
+
         // Set up lazy loading for other command groups
         $this->setupLazyCommandLoading();
     }
@@ -129,7 +129,7 @@ class LazyConsoleServiceProvider extends ServiceProvider
 
         // Determine which group to load based on command
         $groupToLoad = $this->determineCommandGroup($command);
-        
+
         if ($groupToLoad) {
             $this->loadCommandGroup($groupToLoad);
         } else {
@@ -153,11 +153,11 @@ class LazyConsoleServiceProvider extends ServiceProvider
         if (str_contains($command, 'make')) {
             return 'make';
         }
-        
+
         if (str_contains($command, 'migrate') || str_contains($command, 'seed')) {
             return 'database';
         }
-        
+
         if (str_contains($command, 'publish')) {
             return 'publishing';
         }
@@ -170,7 +170,7 @@ class LazyConsoleServiceProvider extends ServiceProvider
      */
     protected function loadCommandGroup(string $group): void
     {
-        if (!isset($this->commandGroups[$group])) {
+        if (! isset($this->commandGroups[$group])) {
             return;
         }
 
@@ -188,7 +188,7 @@ class LazyConsoleServiceProvider extends ServiceProvider
     protected function loadAllCommands(): void
     {
         foreach ($this->commandClasses as $command => $class) {
-            if (!in_array($command, $this->essentialCommands)) {
+            if (! in_array($command, $this->essentialCommands)) {
                 $this->app->singleton($class);
                 $this->commands($class);
             }
