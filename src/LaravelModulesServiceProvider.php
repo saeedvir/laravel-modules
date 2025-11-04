@@ -47,7 +47,11 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
 
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'modules');
 
-        $this->registerModules();
+        // Defer module registration until after Laravel has booted
+        // to avoid "Target class [cache] does not exist" error in Laravel 12
+        $this->app->booted(function () {
+            $this->registerModules();
+        });
     }
 
     /**
