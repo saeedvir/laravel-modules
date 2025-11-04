@@ -1,10 +1,9 @@
-﻿<?php
+<?php
 
 namespace Saeedvir\Modules;
 
-use Illuminate\Container\Container;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 abstract class CachedFileRepository extends FileRepository
 {
@@ -28,7 +27,7 @@ abstract class CachedFileRepository extends FileRepository
         }
 
         $cacheKey = $this->getCacheKey('modules_scan');
-        
+
         return Cache::remember($cacheKey, $this->cacheTtl, function () {
             return parent::scan();
         });
@@ -44,7 +43,7 @@ abstract class CachedFileRepository extends FileRepository
         }
 
         $cacheKey = $this->getCacheKey("module_{$name}");
-        
+
         return Cache::remember($cacheKey, $this->cacheTtl, function () use ($name) {
             return parent::find($name);
         });
@@ -61,7 +60,7 @@ abstract class CachedFileRepository extends FileRepository
 
         $statusKey = $status ? 'enabled' : 'disabled';
         $cacheKey = $this->getCacheKey("modules_by_status_{$statusKey}");
-        
+
         return Cache::remember($cacheKey, $this->cacheTtl, function () use ($status) {
             return parent::getByStatus($status);
         });
@@ -89,7 +88,7 @@ abstract class CachedFileRepository extends FileRepository
     public function clearCache(): void
     {
         $tags = [$this->cachePrefix];
-        
+
         if (method_exists(Cache::getStore(), 'tags')) {
             Cache::tags($tags)->flush();
         } else {
@@ -97,19 +96,19 @@ abstract class CachedFileRepository extends FileRepository
             $keys = [
                 'modules_scan',
                 'modules_by_status_enabled',
-                'modules_by_status_disabled'
+                'modules_by_status_disabled',
             ];
-            
+
             foreach ($keys as $key) {
                 Cache::forget($this->getCacheKey($key));
             }
-            
+
             // Clear individual module caches
             foreach ($this->all() as $module) {
                 Cache::forget($this->getCacheKey("module_{$module->getName()}"));
             }
         }
-        
+
         // Reset static cache
         parent::resetModules();
     }
@@ -139,6 +138,7 @@ abstract class CachedFileRepository extends FileRepository
     {
         $result = parent::delete($name);
         $this->clearCache();
+
         return $result;
     }
 
@@ -166,6 +166,7 @@ abstract class CachedFileRepository extends FileRepository
     public function setCacheTtl(int $ttl): self
     {
         $this->cacheTtl = $ttl;
+
         return $this;
     }
 
@@ -175,7 +176,7 @@ abstract class CachedFileRepository extends FileRepository
     public function getModulesInChunks(int $chunkSize = 50): Collection
     {
         $cacheKey = $this->getCacheKey("modules_chunks_{$chunkSize}");
-        
+
         return Cache::remember($cacheKey, $this->cacheTtl, function () use ($chunkSize) {
             return collect($this->all())->chunk($chunkSize);
         });

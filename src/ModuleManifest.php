@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace Saeedvir\Modules;
 
@@ -97,8 +97,8 @@ class ModuleManifest
         // Use cache for module data in production
         $cacheKey = 'modules.manifest_data';
         $cacheTtl = config('modules.performance.cache_ttl', 3600);
-        
-        if (!app()->runningUnitTests() && config('modules.performance.enable_manifest_cache', true)) {
+
+        if (! app()->runningUnitTests() && config('modules.performance.enable_manifest_cache', true)) {
             self::$manifestData = cache()->remember($cacheKey, $cacheTtl, function () {
                 return $this->buildModulesData();
             });

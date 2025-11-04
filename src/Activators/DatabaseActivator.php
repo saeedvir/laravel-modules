@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace Saeedvir\Modules\Activators;
 
@@ -56,10 +56,10 @@ class DatabaseActivator implements ActivatorInterface
         $this->db = $app['db'];
         $this->cache = $app['cache'];
         $this->config = $app['config'];
-        
+
         $this->table = $this->config->get('modules.activators.database.table', 'module_statuses');
         $this->cacheTtl = $this->config->get('modules.activators.database.cache_ttl', 3600);
-        
+
         $this->ensureTableExists();
     }
 
@@ -84,7 +84,7 @@ class DatabaseActivator implements ActivatorInterface
      */
     public function hasStatus(Module $module, bool $status): bool
     {
-        if (!$module instanceof Module) {
+        if (! $module instanceof Module) {
             return $this->hasStatusByName($module, $status);
         }
 
@@ -122,7 +122,7 @@ class DatabaseActivator implements ActivatorInterface
     public function hasStatusByName(string $name, bool $status): bool
     {
         $statuses = $this->getModuleStatuses();
-        
+
         return isset($statuses[$name]) && $statuses[$name] === $status;
     }
 
@@ -175,13 +175,13 @@ class DatabaseActivator implements ActivatorInterface
      */
     protected function ensureTableExists(): void
     {
-        if (!Schema::hasTable($this->table)) {
+        if (! Schema::hasTable($this->table)) {
             Schema::create($this->table, function ($table) {
                 $table->id();
                 $table->string('name')->unique();
                 $table->boolean('status')->default(true);
                 $table->timestamps();
-                
+
                 $table->index(['name', 'status']);
             });
         }
@@ -193,7 +193,7 @@ class DatabaseActivator implements ActivatorInterface
     public function getEnabledModules(): array
     {
         $statuses = $this->getModuleStatuses();
-        
+
         return array_keys(array_filter($statuses, function ($status) {
             return $status === true;
         }));
@@ -205,7 +205,7 @@ class DatabaseActivator implements ActivatorInterface
     public function getDisabledModules(): array
     {
         $statuses = $this->getModuleStatuses();
-        
+
         return array_keys(array_filter($statuses, function ($status) {
             return $status === false;
         }));
@@ -218,7 +218,7 @@ class DatabaseActivator implements ActivatorInterface
     {
         $data = [];
         $now = now();
-        
+
         foreach ($moduleNames as $name) {
             $data[] = [
                 'name' => $name,
@@ -243,7 +243,7 @@ class DatabaseActivator implements ActivatorInterface
     {
         $data = [];
         $now = now();
-        
+
         foreach ($moduleNames as $name) {
             $data[] = [
                 'name' => $name,

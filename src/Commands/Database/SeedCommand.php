@@ -1,16 +1,16 @@
-﻿<?php
+<?php
 
 namespace Saeedvir\Modules\Commands\Database;
 
 use ErrorException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Str;
+use RuntimeException;
 use Saeedvir\Modules\Commands\BaseCommand;
 use Saeedvir\Modules\Contracts\RepositoryInterface;
 use Saeedvir\Modules\Module;
 use Saeedvir\Modules\Support\Config\GenerateConfigReader;
 use Saeedvir\Modules\Traits\ModuleCommandTrait;
-use RuntimeException;
 use Symfony\Component\Console\Input\InputOption;
 
 class SeedCommand extends BaseCommand

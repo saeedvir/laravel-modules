@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace Saeedvir\Modules;
 
@@ -241,7 +241,7 @@ abstract class Module
         if (in_array($key, ['name', 'description', 'priority', 'version'])) {
             return $this->getLazyMetadata($key, $default);
         }
-        
+
         return $this->json()->get($key, $default);
     }
 
@@ -250,10 +250,10 @@ abstract class Module
      */
     protected function getLazyMetadata(string $key, $default = null)
     {
-        if (!isset($this->metadataCache[$key])) {
+        if (! isset($this->metadataCache[$key])) {
             $this->metadataCache[$key] = $this->json()->get($key, $default);
         }
-        
+
         return $this->metadataCache[$key];
     }
 
